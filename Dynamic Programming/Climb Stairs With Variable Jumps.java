@@ -1,3 +1,21 @@
+/*
+1. You are given a number n, representing the number of stairs in a staircase.
+2. You are on the 0th step and are required to climb to the top.
+3. You are given n numbers, where ith element's value represents - till how far from the step you 
+     could jump to in a single move.  
+     You can of course jump fewer number of steps in the move.
+4. You are required to print the number of different paths via which you can climb to the top.
+
+
+
+Sample Input
+n=10
+3 3 0 2 1 2 4 2 0 0
+    
+Sample Output
+5
+*/
+
 import java.io.*;
 import java.util.*;
 
@@ -33,6 +51,10 @@ public class Main {
         
         
         //Tabulation Method
+        //TC-O(N);
+       // SC-O(N);
+       
+       
         int ans3=climbStairTab(stair,n);
         System.out.println(ans3);
     }
@@ -71,6 +93,8 @@ public class Main {
         {
             return 0;
         }
+        
+        //Checking if we already traverse the stair or not
         if(dp[idx]!=-1)
         {
             return dp[idx];
@@ -80,6 +104,7 @@ public class Main {
         {
             ans+=climbStairMem(stair,idx+i,n,dp);
         }
+        //Saving the result so that we don't traverse it again
         dp[idx]=ans;
         return ans;   
     }
@@ -87,6 +112,23 @@ public class Main {
     public static int climbStairTab(int[] stair,int n)
     {
         
+        int[] dp=new int[n+1];
+        //Because in our base case we  have 1 possibility hence in dp[n]=1 is there
+        dp[n]=1;
+        
+        for(int i=n-1;i>=0;i--)
+        {
+            // j loop decide how many steps we can take based on stair number
+            for(int j=1;j<=stair[i];j++)
+            {
+                //We have to check if we go over the top
+                if(i+j<=n)
+                {
+                    dp[i]+=dp[i+j];
+                }
+            }
+        }
+        return dp[0];
     }
 
 }
