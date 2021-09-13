@@ -12,4 +12,52 @@ stair[]=3 3 0 2 1 2 4 2 0 0
 
 Sample Ouput-> 4
 */
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        // write your code here
+         Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        
+        int[] stair=new int[n];
+        for(int i=0;i<n;i++)
+        {
+            stair[i]=sc.nextInt();
+        }
+        
+        //Recursion Method
+        //TC- Exponential
+        //SC- Constant
+        
+        int ans1=climbStairMim(stair,0,n);
+        System.out.println(ans1);
+    }
+    public static int climbStairMim(int[] stair,int idx,int n)
+    {
+        if(idx==n)
+        {
+            return 1;
+        }
+        if(idx>n)
+        {
+            return Integer.MAX_VALUE;
+        }
+        int ans=Integer.MAX_VALUE;
+        for(int i=1;i<=stair[idx];i++)
+        {
+            ans=Math.min(ans,climbStairMim(stair,idx+i,n));
+        }
+        if(ans==Integer.MAX_VALUE)
+        {
+            return Integer.MAX_VALUE;
+        }
+        
+        int total=ans+1;
+        return total;
+    }
+
+}
 
