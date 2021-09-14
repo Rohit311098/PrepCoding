@@ -1,3 +1,10 @@
+Sample Input
+abc
+Sample Output
+[, c, b, bc, a, ac, ab, abc]
+
+
+
 import java.io.*;
 import java.util.*;
 
