@@ -114,21 +114,21 @@ public class Main {
         
         for(int i=n-1;i>=0;i--)
         {
-            int ans=Integer.MAX_VALUE;
             for(int j=1;j<=stair[i];j++)
             {
                 if(dp[i+j]<=n)
                 {
-                    ans=Math.min(ans,dp[i+j]);
+                    dp[i]=Math.min(ans,1+dp[i+j]);
                 }
             }
-            dp[i]=ans;
+
             
         }
-        for(int i=0;i<=n;i++)
+       /*  for(int i=0;i<=n;i++)
         {
             System.out.println(i+"--->"+dp[i]);
         }
+        */
         return dp[0];
     }
 
