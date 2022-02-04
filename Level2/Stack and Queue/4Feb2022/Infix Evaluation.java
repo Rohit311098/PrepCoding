@@ -3,86 +3,93 @@ import java.io.*;
 
 public static Main
 {
-public static int precedence(char op){
-    if(op == '+' || op == '-') return 1;
-    if(op == '/' || op == '*') return 2;
-    return 0;
-}
-public static int performOp(int val1, char op, int val2){
-    if(op == '+')
-        return val1 + val2;
+ public static int prec(char ch)
+    {
+        if(ch=='*' || ch=='/') return 2;
+        
+        if(ch=='+' || ch=='-') return 1;
+        
+        return 0;
+    }
+  
+public static int perform(int a,char ch,int b)
+    {
+        if(ch=='+')
+        {
+            return a+b;
+        }
+        else if(ch=='-')
+        {
+            return b-a;
+        }
+        else if(ch=='*')
+        {
+            return b*a;
+        }
+        else 
+        {
+            return b/a;
+        }
+    }
     
-    if(op == '-')
-        return val1 - val2;
-        
-    if(op == '/')
-        return val1 / val2;
-        
-    return val1 * val2;
-}
 public static void main(String[] args) throws Exception {
-
-BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+ BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     String exp = br.readLine();
+
+    // code
+    Stack<Character> operator=new Stack<>();
+    Stack<Integer> operand=new Stack<>();
     
-    Stack<Character> operatorStk = new Stack<>();
-    Stack<Integer> operandStk = new Stack<>();
-    
-    
-    for(int i=0; i<exp.length(); i++)
+    for(int i=0;i<exp.length();i++)
     {
-        char ch = exp.charAt(i);
-        if(ch >= '0' && ch <= '9')
+        char ch=exp.charAt(i);
+        if(ch>='0' && ch<='9')
         {
-            // operand -> Push in operand stack
-            operandStk.push(ch - '0');
+            //operand ko directly push kar do
+            operand.push(ch-'0');
         }
-        else
+        else if(ch=='(')
         {
-            if(ch == '('){
-                operatorStk.push(ch);
-                
-            } else if(ch == ')'){
-                
-                while(operatorStk.peek() != '(')
-                {
-                    int val2 = operandStk.pop();
-                    int val1 = operandStk.pop();
-                    char op = operatorStk.pop();
-                    int res = performOp(val1, op, val2);
-                    operandStk.push(res);
-                }
-                
-                operatorStk.pop(); // ( pop
-                
-            } else if(ch == '+' || ch == '-' || ch == '*' || ch == '/') {
-                
-                
-                while(operatorStk.size() > 0 && operatorStk.peek() != '(' && precedence(operatorStk.peek()) >= precedence(ch))
-                {
-                    int val2 = operandStk.pop();
-                    int val1 = operandStk.pop();
-                    char op = operatorStk.pop();
-                    int res = performOp(val1, op, val2);
-                    operandStk.push(res);                    
-                }
-                
-                operatorStk.push(ch);
+            operator.push(ch);
+        }
+        else if(ch==')')
+        {
+            while(operator.peek()!='(')
+            {
+                int a=operand.pop();
+                int b=operand.pop();
+                char op=operator.pop();
+                operand.push(perform(a,op,b));
             }
+            
+            // '(' ko pop karte hai last mai
+            operator.pop();
+            
+        }
+        else if(ch=='+' || ch=='-' || ch=='*' || ch=='/')
+        {
+            
+            while(operator.size()>0 && operator.peek()!='(' && prec(operator.peek())>=prec(ch))
+            {
+                int a=operand.pop();
+                int b=operand.pop();
+                char op=operator.pop();
+                operand.push(perform(a,op,b));
+                
+            }
+            operator.push(ch);
         }
     }
     
-    // perform operations remaining in stack after traversal
-    while(operatorStk.size() > 0)
+    while(operator.size()>0 )
     {
-        int val2 = operandStk.pop();
-        int val1 = operandStk.pop();
-        char op = operatorStk.pop();
-        int res = performOp(val1, op, val2);
-        operandStk.push(res);
+        int a=operand.pop();
+        int b=operand.pop();
+        char op=operator.pop();
+        operand.push(perform(a,op,b));
+                
     }
     
-    // our answer is the only element present in operand
-    System.out.println(operandStk.peek());
- }
+    System.out.println(operand.peek());
+}
 }
